@@ -1,4 +1,5 @@
 import { prisma } from "@/config";
+import { notFoundError } from "@/errors";
 
 async function create(ticketTypeId: number, userId: number){
     const enrollment = (await prisma.enrollment.findMany({
@@ -9,7 +10,7 @@ async function create(ticketTypeId: number, userId: number){
             userId
         }
     }))[0]
-    console.log(enrollment.id, ticketTypeId)
+    if (!enrollment) throw notFoundError()
     return await prisma.ticket.create({
         data:{
             ticketTypeId,
@@ -24,7 +25,6 @@ async function create(ticketTypeId: number, userId: number){
 
 async function getAll(userId: number){
     const result = await prisma.enrollment.findFirst({
-
         include:{
             Ticket: {
                 include: {

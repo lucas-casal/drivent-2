@@ -15,6 +15,7 @@ async function create (body: body, userId: number) {
 
 async function getAll(userId: number){
     const result = await ticketsRepository.getAll(userId)
+    if (!result) throw notFoundError()
     if (!result.Ticket) throw notFoundError()
 
     return result.Ticket
